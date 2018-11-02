@@ -118,31 +118,12 @@ public class Bomber extends Character {
     protected void calculateMove() {
         // TODO: xử lý nhận tín hiệu điều khiển hướng đi từ _input và gọi move() để thực hiện di chuyển
         // TODO: nhớ cập nhật lại giá trị cờ _moving khi thay đổi trạng thái di chuyển
-        int x = 0, y = 0;
-        if(_input.up) y--;
-        if(_input.down) y++;
-        if(_input.left) x--;
-        if(_input.right) x++;
 
-        if(x != 0 || y != 0)  {
-            move(x*Game.getBomberSpeed() , y*Game.getBomberSpeed() );
-            _moving = true;
-        } else {
-            _moving = false;
-        }
     }
 
     @Override
     public boolean canMove(double x, double y) {
         // TODO: kiểm tra có đối tượng tại vị trí chuẩn bị di chuyển đến và có thể di chuyển tới đó hay không
-        for (int c = 0; c < 4; c++) { //colision detection for each corner of the player
-            double xt = ((_x + x) +c% 2 * 11) / Game.TILES_SIZE; //divide with tiles size to pass to tile coordinate
-            double yt = ((_y + y) + c / 2 * 12 - 13) / Game.TILES_SIZE; //these values are the best from multiple tests
-            Entity entity = _board.getEntity(xt, yt, this);
-            if(!entity.collide(this))
-                return false;
-
-        }
         return true;
 
     }
@@ -151,15 +132,7 @@ public class Bomber extends Character {
     public void move(double xa, double ya) {
         // TODO: sử dụng canMove() để kiểm tra xem có thể di chuyển tới điểm đã tính toán hay không và thực hiện thay đổi tọa độ _x, _y
         // TODO: nhớ cập nhật giá trị _direction sau khi di chuyển
-        if(canMove(0, ya)) {
-            _y += ya;
-        }
-        if(canMove(xa,0))
-            _x += xa;
-        if(ya < 0) _direction = 0;
-        if(xa > 0) _direction = 1;
-        if(ya > 0) _direction = 2;
-        if(xa < 0) _direction = 3;
+
 
 
     }
