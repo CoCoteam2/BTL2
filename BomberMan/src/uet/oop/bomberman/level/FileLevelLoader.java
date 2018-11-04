@@ -40,7 +40,7 @@ public class FileLevelLoader extends LevelLoader {
 		try {
 
 			URL Path = FileLevelLoader.class.getResource("/levels/Level"+level+".txt");
-
+			
 			BufferedReader in = new BufferedReader(new InputStreamReader(Path.openStream()));
 			String data = in.readLine();
 			_level = Integer.parseInt(data.substring(0,1));
