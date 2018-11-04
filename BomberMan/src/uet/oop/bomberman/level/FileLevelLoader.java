@@ -38,10 +38,8 @@ public class FileLevelLoader extends LevelLoader {
 		// TODO: đọc dữ liệu từ tệp cấu hình /levels/Level{level}.txt
 		// TODO: cập nhật các giá trị đọc được vào _width, _height, _level, _map
 		try {
-
-			URL Path = FileLevelLoader.class.getResource("/levels/Level"+level+".txt");
-			
-			BufferedReader in = new BufferedReader(new InputStreamReader(Path.openStream()));
+			InputStream input = this.getClass().getResourceAsStream("/levels/Level"+level+".txt");
+			BufferedReader in = new BufferedReader(new InputStreamReader(input));
 			String data = in.readLine();
 			_level = Integer.parseInt(data.substring(0,1));
 			_height = Integer.parseInt(data.substring(2,4));
