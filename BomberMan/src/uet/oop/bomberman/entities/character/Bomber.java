@@ -7,6 +7,8 @@ import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.bomb.Bomb;
 import uet.oop.bomberman.entities.bomb.Flame;
 import uet.oop.bomberman.entities.character.enemy.Enemy;
+import uet.oop.bomberman.entities.tile.Wall;
+import uet.oop.bomberman.entities.tile.destroyable.Brick;
 import uet.oop.bomberman.graphics.Screen;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.input.Keyboard;
@@ -118,12 +120,41 @@ public class Bomber extends Character {
     protected void calculateMove() {
         // TODO: xử lý nhận tín hiệu điều khiển hướng đi từ _input và gọi move() để thực hiện di chuyển
         // TODO: nhớ cập nhật lại giá trị cờ _moving khi thay đổi trạng thái di chuyển
-
+        int x=0,y = 0;
+        if(_input.up)
+            y--;
+        if(_input.down)
+            y++;
+        if(_input.left)
+            x--;
+        if(_input.right)
+            x++;
+        if(x != 0 || y != 0)  {
+            move(x*Game.getBomberSpeed(),y*Game.getBomberSpeed());
+            _moving=true;
+        }
+        else
+        _moving=false;
     }
 
     @Override
     public boolean canMove(double x, double y) {
         // TODO: kiểm tra có đối tượng tại vị trí chuẩn bị di chuyển đến và có thể di chuyển tới đó hay không
+        double[] xa = new double[4];
+        double[] ya = new double[4];
+        xa[0] = (_x + x) / Game.TILES_SIZE;
+        ya[0] = ((_y + y-1)) / Game.TILES_SIZE;
+        xa[1] = (_x + x+ 11) / Game.TILES_SIZE;
+        ya[1] = ((_y + y-1)) / Game.TILES_SIZE;
+        xa[2] = ((_x + x)) / Game.TILES_SIZE;
+        ya[2] = (_y + y-13) / Game.TILES_SIZE;
+        xa[3] = (_x + x+11) / Game.TILES_SIZE;
+        ya[3] = (_y + y-13) / Game.TILES_SIZE;
+        for(int i=0;i<4;i++) {
+            Entity entity = _board.getEntity(xa[i], ya[i], this);
+            if (!entity.collide(this))
+                return false;
+        }
         return true;
 
     }
@@ -132,9 +163,18 @@ public class Bomber extends Character {
     public void move(double xa, double ya) {
         // TODO: sử dụng canMove() để kiểm tra xem có thể di chuyển tới điểm đã tính toán hay không và thực hiện thay đổi tọa độ _x, _y
         // TODO: nhớ cập nhật giá trị _direction sau khi di chuyển
-
-
-
+        if(xa>0)
+            _direction=1;
+        if(xa<0)
+            _direction=3;
+        if(ya<0)
+            _direction=0;
+        if(ya>0)
+            _direction=2;
+        if(canMove(xa,ya)) {
+            _y += ya;
+            _x += xa;
+        }
     }
 
     @Override
@@ -143,7 +183,7 @@ public class Bomber extends Character {
         // TODO: xử lý va chạm với Enemy
         if(e instanceof Flame)
         {   kill();
-            return true;
+            return false;
         }
         if(e instanceof Enemy)
         {

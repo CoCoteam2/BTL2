@@ -2,6 +2,7 @@ package uet.oop.bomberman.level;
 
 import uet.oop.bomberman.Board;
 import uet.oop.bomberman.Game;
+import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.LayeredEntity;
 import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.entities.character.enemy.Balloon;
@@ -32,7 +33,9 @@ public class FileLevelLoader extends LevelLoader {
 	public FileLevelLoader(Board board, int level) throws LoadLevelException {
 		super(board, level);
 	}
-	
+	public FileLevelLoader(){
+
+	}
 	@Override
 	public  void loadLevel(int level)throws LoadLevelException{
 		// TODO: đọc dữ liệu từ tệp cấu hình /levels/Level{level}.txt
@@ -51,7 +54,6 @@ public class FileLevelLoader extends LevelLoader {
 				for(int j=0;j<_width;j++) {
 					_map[i][j] =line.charAt(j);
 				}
-                System.out.println();
 			}
 			in.close();
 		} catch (IOException e) {
@@ -133,7 +135,7 @@ public class FileLevelLoader extends LevelLoader {
 								)
 						);
 						break;
-						default:
+					default:
 							_board.addEntity(pos, new Grass(x, y, Sprite.grass) );
 							break;
 
@@ -142,4 +144,7 @@ public class FileLevelLoader extends LevelLoader {
 		}
 	}
 
-}
+
+	}
+
+
