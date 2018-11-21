@@ -83,20 +83,17 @@ public abstract class Enemy extends Character {
 		double x=0,y=0;
 		if(_steps <= 0){
 			_direction = _ai.calculateDirection();
-			_steps = MAX_STEPS;
+			_steps = MAX_STEPS; //32
 		}
-		if(_direction==0)
-			y++;
-		if(_direction==1)
-			x++;
-		if(_direction==2)
-			x--;
-		if(_direction==3)
-			y--;
+		if(_direction==0) y--;
+		if(_direction==1) x++;
+		if(_direction==2) y++;
+		if(_direction==3) x--;
 		if(canMove(x, y)) {
-			_steps -= 1 + rest;
-			move(x * _speed, y * _speed);
+			_steps -= 1 + rest;//rest=0
+			move(x * _speed, y * _speed); //speed=0.5
 			_moving = true;
+
 		} else {
 			_steps = 0;
 			_moving = false;
@@ -113,21 +110,35 @@ public abstract class Enemy extends Character {
 	
 	@Override
 	public boolean canMove(double x, double y) {
-		double xr = _x, yr = _y - 16; //subtract y to get more accurate results
+//		double xa = _x, ya = _y - 16; //trừ y để có kq chính xác hơn
+//		if(_direction == 0) { ya += _sprite.getSize() -1 ; xa += _sprite.getSize()/2; }//len
+//		if(_direction == 1) {ya += _sprite.getSize()/2; xa += 1;}//phai
+//		if(_direction == 2) { xa += _sprite.getSize()/2; ya += 1;}//xuong
+//		if(_direction == 3) { xa += _sprite.getSize() -1; ya += _sprite.getSize()/2;}//trai
+//
+//		int xx = Coordinates.pixelToTile(xa) +(int)x;
+//		int yy = Coordinates.pixelToTile(ya) +(int)y;
+//
+//		Entity a = _board.getEntity(xx, yy, this); //entity of the position we want to go
+//
+//		return a.collide(this);
 
-			//the thing is, subract 15 to 16 (sprite size), so if we add 1 tile we get the next pixel tile with this
-			//we avoid the shaking inside tiles with the help of steps
-		if(_direction == 0) { yr += _sprite.getSize() -1 ; xr += _sprite.getSize()/2; }
-		if(_direction == 1) {yr += _sprite.getSize()/2; xr += 1;}
-		if(_direction == 2) { xr += _sprite.getSize()/2; yr += 1;}
-		if(_direction == 3) { xr += _sprite.getSize() -1; yr += _sprite.getSize()/2;}
-
-		int xx = Coordinates.pixelToTile(xr) +(int)x;
-		int yy = Coordinates.pixelToTile(yr) +(int)y;
-
-		Entity a = _board.getEntity(xx, yy, this); //entity of the position we want to go
-
-		return a.collide(this);
+		double[] xa = new double[4];
+		double[] ya = new double[4];
+		xa[0] = (_x + x) / Game.TILES_SIZE;
+		ya[0] = ((_y + y-1)) / Game.TILES_SIZE;
+		xa[1] = (_x + x+ 15) / Game.TILES_SIZE;
+		ya[1] = ((_y + y-1)) / Game.TILES_SIZE;
+		xa[2] = ((_x + x)) / Game.TILES_SIZE;
+		ya[2] = (_y + y-15) / Game.TILES_SIZE;
+		xa[3] = (_x + x+15) / Game.TILES_SIZE;
+		ya[3] = (_y + y-15) / Game.TILES_SIZE;
+		for(int i=0;i<4;i++) {
+			Entity entity = _board.getEntity(xa[i], ya[i], this);
+			if (!entity.collide(this))
+				return false;
+		}
+		return true;
 	}
 
 	@Override

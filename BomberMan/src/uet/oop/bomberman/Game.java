@@ -29,7 +29,7 @@ public class Game extends Canvas {
 	private static final int BOMBRADIUS = 1;
 	private static final double BOMBERSPEED = 1.0;
 	
-	public static final int TIME = 20000;
+	public static final int TIME = 200;
 	public static final int POINTS = 0;
 	
 	protected static int SCREENDELAY = 3;
@@ -185,9 +185,7 @@ public class Game extends Canvas {
 		_screenDelay = SCREENDELAY;
 	}
 
-	public Board getBoard() {
-		return _board;
-	}
+	public Board getBoard() { return _board; }
 
 	public boolean isPaused() {
 		return _paused;

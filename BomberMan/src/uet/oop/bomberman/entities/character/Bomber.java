@@ -1,17 +1,20 @@
 package uet.oop.bomberman.entities.character;
 
+import com.sun.xml.internal.bind.v2.runtime.Coordinator;
 import sun.util.locale.provider.FallbackLocaleProviderAdapter;
 import uet.oop.bomberman.Board;
 import uet.oop.bomberman.Game;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.bomb.Bomb;
 import uet.oop.bomberman.entities.bomb.Flame;
+import uet.oop.bomberman.entities.bomb.FlameSegment;
 import uet.oop.bomberman.entities.character.enemy.Enemy;
 import uet.oop.bomberman.entities.tile.Wall;
 import uet.oop.bomberman.entities.tile.destroyable.Brick;
 import uet.oop.bomberman.graphics.Screen;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.input.Keyboard;
+import uet.oop.bomberman.level.Coordinates;
 
 import java.util.Iterator;
 import java.util.List;
@@ -78,7 +81,14 @@ public class Bomber extends Character {
         // TODO: _timeBetweenPutBombs dùng để ngăn chặn Bomber đặt 2 Bomb cùng tại 1 vị trí trong 1 khoảng thời gian quá ngắn
         // TODO: nếu 3 điều kiện trên thỏa mãn thì thực hiện đặt bom bằng placeBomb()
         // TODO: sau khi đặt, nhớ giảm số lượng Bomb Rate và reset _timeBetweenPutBombs về 0
-
+        if(_input.space && Game.getBombRate()>0 && _timeBetweenPutBombs<0){
+            int x = Coordinates.pixelToTile(_x + _sprite.getSize() / 2);
+            int y = Coordinates.pixelToTile(_y - _sprite.getSize() / 2)  ;
+            placeBomb(x,y);
+            // trừ đi nửa chiều cao của người chơi và trừ đi 1 vị trí y
+            Game.addBombRate(-1);
+            _timeBetweenPutBombs=30;
+        }
 
     }
 
@@ -132,6 +142,7 @@ public class Bomber extends Character {
         if(x != 0 || y != 0)  {
             move(x*Game.getBomberSpeed(),y*Game.getBomberSpeed());
             _moving=true;
+
         }
         else
         _moving=false;
